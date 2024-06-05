@@ -19,10 +19,28 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('/users/login (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users/login')
+      .send({
+        username: 'admin',
+        password: 'admin',
+      })
+      .expect(201);
+
+    expect(response.body.status).toBe(true);
+    expect(response.body.data).toHaveProperty('token');
+  });
+
+  it('/users/register (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users/register')
+      .send({
+        username: 'admin3',
+        password: 'admin3',
+      })
+      .expect(201);
+
+    expect(response.body).toHaveProperty('_id');
   });
 });
